@@ -47,7 +47,13 @@ object ChildBenefit extends App {
   }
 
   //EXT
-  def calculateYearlyAmountEldest(): Double = ???
+  def calculateYearlyAmountEldest(): Double = {
+    val rate = EldestChildRate * 52
+    (rate * 100).toInt / 100.0
+  }
 
-  def calculateYearlyAmountFurtherChild(): Double = ???
+  def calculateYearlyAmountFurtherChild(): Double = {
+    val rate = FurtherChildRate * 52
+    (rate * 100).toInt / 100.0
+  }
 }
