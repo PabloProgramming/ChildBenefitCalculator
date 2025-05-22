@@ -3,9 +3,8 @@ package ChildBenefit
 object ChildBenefit extends App {
   val EldestChildRate = 26.05 //per week
   val FurtherChildRate = 17.25 //per week
-  // val fullChildBenefit = 500.0 //per year ??? 500
-  // val reducedRateTwoOrMoreBenefit = 300.0 //per year  ??? 300
-  // val reducedRateLessThanTwoBenefit = 150.0 //per year ??? 150
+  val reducedRateOneChild = 2.88 //per week
+  val reducedRateTwoOrMore = 5.77 //per week per child
   val additionalDisabledRateBenefit = 200.0 //per year
 
   def isChildEligible(childInFamily: ChildInFamily): Boolean = {
@@ -14,24 +13,42 @@ object ChildBenefit extends App {
     else false
   }
 
-  def calculateWeeklyAmount(children: List[ChildInFamily]): BigDecimal = {
-    val eligible = children.filter(isChildEligible) //filters elig children
-    if (eligible.isEmpty)
-      BigDecimal(0)
+  //  /** disabled child rate * */
+  def additionalDisabledBenefitRate(children: List[ChildInFamily], income: Int): BigDecimal = {
+    val hasDisability = children.map(_.isDisabled)
+    if (hasDisability.nonEmpty && income <= 100000)
+      children.length * 3.85
     else
-      BigDecimal(EldestChildRate) + (eligible.length - 1) * BigDecimal(FurtherChildRate)
+      BigDecimal(0)
+  }
+
+
+  def calculateWeeklyAmount(children: List[ChildInFamily], income: Int): BigDecimal = {
+    val eligible = children.filter(isChildEligible)
+
+    eligible match {
+      case Nil => BigDecimal(0) // Case when there are no eligible children
+      case _ if income <= 50000 =>
+        BigDecimal(EldestChildRate) + (eligible.length - 1) * BigDecimal(FurtherChildRate)
+      case _ if income >= 50001 && income <= 100000 && eligible.length == 1 =>
+        BigDecimal(reducedRateOneChild)
+      case _ if income >= 50001 && income <= 100000 && eligible.length >= 2 =>
+        BigDecimal(reducedRateTwoOrMore) * eligible.length
+      case _ => BigDecimal(0) // Default case
+    }
+  }
+
+  def finalTotalValue(children: List[ChildInFamily], income: Int) = {
+    calculateWeeklyAmount(children, income) + additionalDisabledBenefitRate(children, income)
   }
 
   /** disabled child rate * */
   def additionalDisabledBenefitRate(children: List[ChildInFamily]): Double = {
     children.count(_.isDisabled) * additionalDisabledRateBenefit
   }
-//  def calculateYearlyAmountEldest (): Double = {
-//     ??? * ??? //we are expecting here EldestChildRate * 52
-//      }
-//
-//  def calculateYearlyAmountFurtherChild (): Double = {
-// ??? * ???
-// we are expecting here FurtherChildRate * 52
-//  }
+
+  //EXT
+  def calculateYearlyAmountEldest(): Double = ???
+
+  def calculateYearlyAmountFurtherChild(): Double = ???
 }

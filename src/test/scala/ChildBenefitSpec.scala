@@ -13,4 +13,5 @@ class ChildBenefitSpec extends AnyWordSpec with Matchers {
         result shouldBe expectedResult      
       }    
     }  
-  }}
+  }
+}
