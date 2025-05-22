@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ChildBenefitCalculator.iml" filepath="$PROJECT_DIR$/.idea/ChildBenefitCalculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator.ChildBenefitCalculator-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator.ChildBenefitCalculator-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator/ChildBenefitCalculator.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator/ChildBenefitCalculator.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator/ChildBenefitCalculator.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ChildBenefitCalculator/ChildBenefitCalculator.test.iml" />
     </modules>
   </component>
 </project>
