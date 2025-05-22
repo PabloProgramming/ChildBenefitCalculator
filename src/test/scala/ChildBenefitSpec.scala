@@ -51,6 +51,7 @@ class ChildBenefitSpec extends AnyWordSpec with Matchers {
 
 
 
+  
   "calculateWeeklyAmount" should {
     "return full benefit (eldest child rate)" when {
       "Family has one child under 16 and an annual income less than £50,001" in {
@@ -146,7 +147,124 @@ class ChildBenefitSpec extends AnyWordSpec with Matchers {
 
 
 
+  "finalTotalValue" should {
+    "return full benefit and special circumstances rate" when {
+      "Family has one child under 16 with special circumstances and an annual income less than £50,001" in {
+        val children = List(ChildInFamily(age = 13, inEducation = true, isDisabled = true))
+        val income: Int = 40000
+        val result = ChildBenefit.finalTotalValue(children, income)
+        val expectedResult: BigDecimal = BigDecimal(29.90)
+        result shouldBe expectedResult
+      }
+    }
+  }
 
+  "finalTotalValue" should {
+    "return full benefit and special circumstances rate" when {
+      "Family has two children under 16 with special circumstances and an annual income less than £50,001" in {
+        val children = List(ChildInFamily(age = 13, inEducation = true, isDisabled = true),
+          ChildInFamily(age = 10, inEducation = true, isDisabled = false))
+        val income: Int = 40000
+        val result = ChildBenefit.finalTotalValue(children, income)
+        val expectedResult: BigDecimal = BigDecimal(47.15)
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "finalTotalValue" should {
+    "return reduced benefit and special circumstances rate" when {
+      "Family has one child under 16 with special circumstances and an annual income between £50,001 and £100,000" in {
+        val children = List(ChildInFamily(age = 7, inEducation = true, isDisabled = true))
+        val income: Int = 57000
+        val result = ChildBenefit.finalTotalValue(children, income)
+        val expectedResult: BigDecimal = BigDecimal(6.73)
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "finalTotalValue" should {
+    "return reduced benefit and special circumstances rate" when {
+      "Family has two children under 16 with special circumstances and an annual income between £50,001 and £100,000" in {
+        val children = List(ChildInFamily(age = 7, inEducation = true, isDisabled = true),
+          ChildInFamily(age = 14, inEducation = true, isDisabled = false))
+        val income: Int = 63000
+        val result = ChildBenefit.finalTotalValue(children, income)
+        val expectedResult: BigDecimal = BigDecimal(15.39)
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "finalTotalValue" should {
+    "return no benefits" when {
+      "Family has two children under 16 with special circumstances and an annual income over £100,000" in {
+        val children = List(ChildInFamily(age = 7, inEducation = true, isDisabled = true),
+          ChildInFamily(age = 14, inEducation = true, isDisabled = false))
+        val income: Int = 100023
+        val result = ChildBenefit.finalTotalValue(children, income)
+        val expectedResult: BigDecimal = BigDecimal(0)
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+
+
+
+  "additionalDisabledBenefitRate" should {
+    "return 0.0" when {
+      "there are no disabled children in the list" in {
+        val children = List(
+          ChildInFamily(age = 5, inEducation = true, isDisabled = false),
+          ChildInFamily(age = 10, inEducation = true, isDisabled = false)
+        )
+        val result = ChildBenefit.additionalDisabledBenefitRate(children)
+        val expectedResult: Double = 0.00
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "additionalDisabledBenefitRate" should {
+    "return the correct total additional benefit" when {
+      "there are disabled children in the list" in {
+        val children = List(
+          ChildInFamily(age = 7, inEducation = true, isDisabled = true),
+          ChildInFamily(age = 14, inEducation = true, isDisabled = false),
+          ChildInFamily(age = 3, inEducation = false, isDisabled = true)
+        )
+        val result = ChildBenefit.additionalDisabledBenefitRate(children)
+        val expectedResult = 2 * 200
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+
+
+  
+  "calculateYearlyAmountEldest" should {
+    "return yearly amount eldest child rate" when {
+      "Family has one child under 16 and an annual income less than £50,001" in {
+        val expectedResult = 1354.60
+        val result = ChildBenefit.calculateYearlyAmountEldest()
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "calculateYearlyAmountFurtherChild" should {
+    "return yearly amount further child rate" when {
+      "Family has two children under 16 and an annual income less than £50,001" in {
+        val expectedResult = 897.00
+        val result = ChildBenefit.calculateYearlyAmountFurtherChild()
+        result shouldBe expectedResult
+      }
+    }
+  }
 
 
 }
+
