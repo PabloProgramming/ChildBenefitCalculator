@@ -8,20 +8,19 @@ object ChildBenefit extends App {
   val additionalDisabledRateBenefit = 200.0 //per year
 
   def isChildEligible(childInFamily: ChildInFamily): Boolean = {
-    if (childInFamily.age < 16) true
+    if (childInFamily.age <= 16) true
     else if (childInFamily.age < 20 && childInFamily.inEducation) true
     else false
   }
 
   //  /** disabled child rate * */
-  def additionalDisabledBenefitRate(children: List[ChildInFamily], income: Int): BigDecimal = {
-    val hasDisability = children.map(_.isDisabled)
-    if (hasDisability.nonEmpty && income <= 100000)
-      children.length * 3.85
+    def additionalDisabledBenefitRate(children: List[ChildInFamily], income: Int): BigDecimal = {
+    val countChildrenWithDisability = children.filter(_.isDisabled == true)
+    if (countChildrenWithDisability.nonEmpty && income <= 100000)
+      countChildrenWithDisability.length * 3.85
     else
       BigDecimal(0)
   }
-
 
   def calculateWeeklyAmount(children: List[ChildInFamily], income: Int): BigDecimal = {
     val eligible = children.filter(isChildEligible)
