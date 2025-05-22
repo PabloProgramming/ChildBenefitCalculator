@@ -266,5 +266,38 @@ class ChildBenefitSpec extends AnyWordSpec with Matchers {
   }
 
 
+  "calculateChildBenefitCharge" should {
+    "return 0" when {
+      "Family income is less than £50,001" in {
+        val expectedResult = 0.0
+        val result = ChildBenefit.calculateChildBenefitCharge(50000, 1345)
+        result shouldBe expectedResult
+      }
+    }
+  }
+
+  "calculateChildBenefitCharge" should {
+    "return partial charge" when {
+    "Family income between £50,000 and £60,000" in {
+      val income = 55000
+      val weeklyBenefit = 26.05
+      val expectedResult = 677.30
+      val result = ChildBenefit.calculateChildBenefitCharge(income, weeklyBenefit)
+      result shouldBe expectedResult
+    }
+  }
+}
+
+  "calculateChildBenefitCharge" should {
+    "return full charge (no childBenefit)" when {
+      "Family income over £60,000" in {
+        val income = 61000
+        val weeklyBenefit = 26.05
+        val expectedResult = 1354.60
+        val result = ChildBenefit.calculateChildBenefitCharge(income, weeklyBenefit)
+        result shouldBe expectedResult
+      }
+    }
+  }
 }
 

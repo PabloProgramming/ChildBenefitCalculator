@@ -56,4 +56,17 @@ object ChildBenefit extends App {
     val rate = FurtherChildRate * 52
     (rate * 100).toInt / 100.0
   }
+
+  def calculateChildBenefitCharge(income: Int, childBenefitWeekly: Double): Double = {
+    if (income <= 50000) 0.0
+    else {
+      val annualBenefit = childBenefitWeekly * 52
+      val incomeDifference = income - 50000
+      val chargePercentage = math.min(incomeDifference / 10000.0, 1.0) // 100 for the percentage and / 100 for the formula
+      val rawCharge = annualBenefit * chargePercentage
+      (rawCharge * 100).toInt / 100.0
+    }
+  }
+
+
 }
