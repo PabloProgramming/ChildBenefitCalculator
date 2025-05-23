@@ -32,7 +32,7 @@ class ChildBenefitSpec extends AnyWordSpec with Matchers {
       "child age is between 16 and 19 and not enrolled in approved education" in {
         val child = ChildInFamily(age = 16, inEducation = false, isDisabled = false)
         val result = ChildBenefit.isChildEligible(child)
-        val expectedResult = true
+        val expectedResult = false
         result shouldBe expectedResult
       }
     }

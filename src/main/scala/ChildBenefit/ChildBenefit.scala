@@ -8,7 +8,7 @@ object ChildBenefit extends App {
   val additionalDisabledRateBenefit = 200.0 //per year
 
   def isChildEligible(childInFamily: ChildInFamily): Boolean = {
-    if (childInFamily.age <= 16) true
+    if (childInFamily.age < 16) true
     else if (childInFamily.age < 20 && childInFamily.inEducation) true
     else false
   }
